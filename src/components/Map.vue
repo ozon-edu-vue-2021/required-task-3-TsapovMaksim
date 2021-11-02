@@ -26,11 +26,11 @@ export default {
   },
   mounted() {
     this.map = d3.select(this.$refs.map);
-    this.g = this.map.select("g");
+    this.group = this.map.select("g");
     this.table = d3.select(this.$refs.table);
     this.tables = tables;
 
-    if (this.g) {
+    if (this.group) {
       this.drawTables();
     } else {
       console.log("g not found");
@@ -41,14 +41,14 @@ export default {
     return {
       isLoading: false,
       map: null,
-      g: null,
+      group: null,
       table: null,
       tables: [],
     };
   },
   methods: {
     drawTables() {
-      const svgTablesGroup = this.g.append("g").classed("grupPLaces", true);
+      const svgTablesGroup = this.group.append("g").classed("grupPLaces", true);
 
       this.tables.forEach((table) => {
         const svgTable = svgTablesGroup

@@ -3,7 +3,7 @@
     <h3>Карта офиса</h3>
 
     <div v-if="!isLoading" class="map-root">
-      <MapSvg ref="map" />
+      <MapSvg @click="handleClick" ref="map" />
       <TableSvg ref="table" v-show="false" />
     </div>
     <div v-else>Loading...</div>
@@ -18,6 +18,7 @@ import TableSvg from "../assets/images/workPlace.svg";
 
 import tables from "../assets/data/tables.json";
 import legends from "../assets/data/legend.json";
+import people from "../assets/data/people.json";
 
 export default {
   components: {
@@ -33,7 +34,7 @@ export default {
     if (this.group) {
       this.drawTables();
     } else {
-      console.log("g not found");
+      console.log("group not found");
     }
   },
 
@@ -47,6 +48,18 @@ export default {
     };
   },
   methods: {
+    handleClick(e) {
+      const pathArr = Array.from(e.path);
+      const isTableClicked = pathArr.some((el) => {
+        if (el.classList) {
+          return Array.from(el.classList).includes("employer-place");
+        }
+      });
+
+      if (!isTableClicked) {
+        this.$emit("update:isUserOpenned", false);
+      }
+    },
     drawTables() {
       const svgTablesGroup = this.group.append("g").classed("grupPLaces", true);
 
@@ -55,7 +68,11 @@ export default {
           .append("g")
           .attr("transform", `translate(${table.x} ${table.y}) scale(0.5)`)
           .attr("id", table._id)
-          .classed("employer-place", true);
+          .classed("employer-place", true)
+          .on("click", () => {
+            const person = people.find((p) => p.tableId === table._id) ?? null;
+            this.$emit("selectPerson", person);
+          });
 
         svgTable
           .append("g")

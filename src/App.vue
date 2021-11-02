@@ -1,8 +1,11 @@
 <template>
   <div id="app">
     <div class="office">
-      <Map />
-      <SideMenu />
+      <Map
+        :isUserOpenned.sync="isUserOpenned"
+        @selectPerson="handleSelectPerson"
+      />
+      <SideMenu :isUserOpenned.sync="isUserOpenned" :person="person" />
     </div>
   </div>
 </template>
@@ -16,6 +19,19 @@ export default {
   components: {
     Map,
     SideMenu,
+  },
+
+  data() {
+    return {
+      person: null,
+      isUserOpenned: false,
+    };
+  },
+  methods: {
+    handleSelectPerson(person) {
+      this.isUserOpenned = true;
+      this.person = person;
+    },
   },
 };
 </script>
